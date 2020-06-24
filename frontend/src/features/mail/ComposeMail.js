@@ -5,7 +5,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import { sendMessage, setOpenDialog } from './mailSlice';
 import { unwrapResult } from '@reduxjs/toolkit'
 
-export default function MailCompose(props)
+export default function ComposeMail(props)
 {
     const dispatch = useDispatch();
     const emptyForm = {
@@ -15,7 +15,7 @@ export default function MailCompose(props)
         message: ''
     }
     const [form, setForm] = useState({...emptyForm});
-    const { messagePending, openDialog } = useSelector(state => state.mail);
+    const { messagePending, openDialog } = useSelector(state => state.mailApp);
     const [ toast, setToast] = useState({show: false, message: ''});
 
     function handleChange(e){
@@ -23,11 +23,6 @@ export default function MailCompose(props)
             ...form,
             [e.target.name]: e.target.value
         })
-    }
-
-    function handleOpenDialog()
-    {
-        dispatch(setOpenDialog(true));
     }
 
     function handleCloseDialog()
@@ -58,15 +53,6 @@ export default function MailCompose(props)
 
     return (
         <div className="p-24">
-
-            <Button
-                variant="contained"
-                color="primary"
-                className="w-full"
-                onClick={handleOpenDialog}
-            >
-                open
-            </Button>
             <Snackbar
                 anchorOrigin={{
                     vertical: 'bottom',
