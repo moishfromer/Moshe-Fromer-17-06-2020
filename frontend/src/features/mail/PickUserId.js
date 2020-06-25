@@ -1,21 +1,23 @@
-import React, {useState} from 'react';
-import { TextField, Button, CircularProgress } from '@material-ui/core';
+import React from 'react';
+import { TextField } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { getMessages } from './mailSlice';
+import { getMessages, setUserId } from './mailSlice';
 
 export default function PickUserId(){
     const dispatch = useDispatch();
-    const [userId, setUserId] = useState('');
-    const { messagePending, openDialog } = useSelector(state => state.mailApp);
-    const [ toast, setToast] = useState({show: false, message: ''});
+    const { userId } = useSelector(state => state.mailApp);
 
-    const handleChange = e => setUserId(e.target.value);
-    const handleSubmit = e => {
-        e.preventDefault()
-        dispatch(getMessages(userId))
+    const handleChange = e => {
+        const userId = e.target.value;
+        if(userId && isNaN(userId)) return;
+
+        dispatch(setUserId(userId))
+        if(userId){
+            dispatch(getMessages(userId))
+        }
     }
+
     return (
-        <form noValidate onSubmit={handleSubmit} style={{display: 'flex'}}>
             <TextField
                 style={{margin: '8px'}}
                 label="UserId"
@@ -27,10 +29,5 @@ export default function PickUserId(){
                 fullWidth
                 required
             />
-            <Button variant='contained' color='primary' style={{margin: '8px'}} type='submit' disabled={!userId}>
-                {messagePending ? <CircularProgress size={20} color='inherit'/> : 'go'}
-            </Button>
-        </form>
-
     )
 }

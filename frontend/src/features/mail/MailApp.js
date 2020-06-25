@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
-import Sidebar from './Sidebar';
+import Sidebar from '../filters/Sidebar';
 import MailList from './MailList';
 import PickUserId from './PickUserId';
 import Header from './Header';
@@ -18,7 +18,7 @@ export default function MailApp(){
             </Grid>
             <Grid item md={9}>
                 <PickUserId/>
-                <MailList />
+                <MailList/>
             </Grid>
         </Grid>
     )
