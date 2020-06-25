@@ -21,11 +21,20 @@ export const getMessages = createAsyncThunk(
   }
 )
 
+export const deleteMessage = createAsyncThunk(
+  'mail/deleteMessage',
+  async (messageId, thunkAPI) => {
+    const response = await axios.delete(baseUrl + '/emails/messages/' + messageId)
+    return messageId
+  }
+)
+
 export const mailSlice = createSlice({
   name: 'mail',
   initialState: {
     messagePending: false,
     getMessagesPending: false,
+    deletePending: false,
     openDialog: false,
     mails: [],
     userId: '',
@@ -38,12 +47,20 @@ export const mailSlice = createSlice({
       [sendMessage.pending]: (state, action) => {state.messagePending = true},
       [sendMessage.fulfilled]: (state, action) => {state.messagePending = false},
       [sendMessage.rejected]: (state, action) => {state.messagePending = false},
+
       [getMessages.pending]: (state, action) => {state.getMessagesPending = true},
       [getMessages.fulfilled]: (state, action) => {
         state.getMessagesPending = false
-        state.mails = action.payload
+        state.mails = action.payload.reverse()
       },
       [getMessages.rejected]: (state, action) => {state.getMessagesPending = false},
+
+      [deleteMessage.pending]: (state, action) => {state.deletePending = true},
+      [deleteMessage.fulfilled]: (state, action) => {
+        state.deletePending = false
+        state.mails = state.mails.filter(mail => mail.id !== action.payload)
+      },
+      [deleteMessage.rejected]: (state, action) => {state.deletePending = false},
   }
 });
 

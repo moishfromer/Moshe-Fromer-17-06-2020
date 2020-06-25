@@ -28,6 +28,7 @@ export default function PickUserId(){
                 variant="outlined"
                 fullWidth
                 required
+                autoFocus
             />
     )
 }
