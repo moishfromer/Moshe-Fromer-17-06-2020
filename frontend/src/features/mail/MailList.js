@@ -59,7 +59,7 @@ export default function MailList(){
                         <React.Fragment key={mail.id}>
                             <ListItem alignItems="flex-start">
                                 <ListItemAvatar>
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                                <Avatar />
                                 </ListItemAvatar>
                                 <ListItemText
                                 primary={mail.subject + ' - ' + new Date(mail.creation_date).toLocaleTimeString()}
