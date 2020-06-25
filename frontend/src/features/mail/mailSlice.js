@@ -24,10 +24,12 @@ export const getMessages = createAsyncThunk(
 export const deleteMessage = createAsyncThunk(
   'mail/deleteMessage',
   async (messageId, thunkAPI) => {
-    const response = await axios.delete(baseUrl + '/emails/messages/' + messageId)
+    await axios.delete(baseUrl + '/emails/messages/' + messageId)
     return messageId
   }
 )
+
+const emptyToast = {show: false, message: ''}
 
 export const mailSlice = createSlice({
   name: 'mail',
@@ -38,15 +40,27 @@ export const mailSlice = createSlice({
     openDialog: false,
     mails: [],
     userId: '',
+    feedbackToast: {...emptyToast},
   },
   reducers: {
       setOpenDialog: (state, action) => { state.openDialog = action.payload},
-      setUserId: (state, action) => {state.userId = action.payload}
+      setUserId: (state, action) => {state.userId = action.payload},
+      closeToast: (state) => {state.feedbackToast = {...emptyToast}}
   },
   extraReducers: {
       [sendMessage.pending]: (state, action) => {state.messagePending = true},
-      [sendMessage.fulfilled]: (state, action) => {state.messagePending = false},
-      [sendMessage.rejected]: (state, action) => {state.messagePending = false},
+      [sendMessage.fulfilled]: (state, action) => {
+        state.messagePending = false;
+        state.openDialog = false;
+        state.feedbackToast = {
+          show: true, 
+          message: 'message sent'
+        }
+      },
+      [sendMessage.rejected]: (state, action) => {
+        state.messagePending = false;
+        state.feedbackToast = {show: true, message: 'message failed'}
+      },
 
       [getMessages.pending]: (state, action) => {state.getMessagesPending = true},
       [getMessages.fulfilled]: (state, action) => {
@@ -59,11 +73,15 @@ export const mailSlice = createSlice({
       [deleteMessage.fulfilled]: (state, action) => {
         state.deletePending = false
         state.mails = state.mails.filter(mail => mail.id !== action.payload)
+        state.feedbackToast = {show: true, message: 'message deleted'}
       },
-      [deleteMessage.rejected]: (state, action) => {state.deletePending = false},
+      [deleteMessage.rejected]: (state, action) => {
+        state.deletePending = false
+        state.feedbackToast = {show: true, message: 'delete failed'}
+      },
   }
 });
 
-export const { setOpenDialog, setUserId } = mailSlice.actions;
+export const { setOpenDialog, setUserId, closeToast } = mailSlice.actions;
 
 export default mailSlice.reducer;

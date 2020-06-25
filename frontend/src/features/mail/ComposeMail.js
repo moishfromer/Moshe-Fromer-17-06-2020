@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {TextField, Button, Dialog, DialogActions, DialogContent, Typography, Toolbar, AppBar, CircularProgress,
-     Snackbar } from '@material-ui/core';
+import {TextField, Button, Dialog, DialogActions, DialogContent, Typography, Toolbar, AppBar, CircularProgress } from '@material-ui/core';
 import {useSelector, useDispatch} from 'react-redux';
 import { sendMessage, setOpenDialog } from './mailSlice';
 import { unwrapResult } from '@reduxjs/toolkit'
@@ -16,12 +15,16 @@ export default function ComposeMail(props)
     }
     const [form, setForm] = useState({...emptyForm});
     const { messagePending, openDialog } = useSelector(state => state.mailApp);
-    const [ toast, setToast] = useState({show: false, message: ''});
 
     function handleChange(e){
+        const { name, value } = e.target;
+
+        // validate sender and receiver are numeric.
+        if(['sender','receiver'].includes(name) && isNaN(value))return;
+
         setForm({
             ...form,
-            [e.target.name]: e.target.value
+            [name]: value
         })
     }
 
@@ -38,31 +41,19 @@ export default function ComposeMail(props)
     function handleSubmit(ev)
     {
         ev.preventDefault();
+        
         dispatch(sendMessage(form))
         .then(unwrapResult)
         .then(res => {
-            setToast({show: true, message: 'message sent'})
-            dispatch(setOpenDialog(false))
             setForm({...emptyForm})
         })
-        .catch(err => setToast({show: true, message: 'message failed'}))
+        
     }
 
     const canBeSubmitted = () => form.sender && form.receiver && form.subject && form.message;
-    const handleToastClose = () => setToast({show: false, message: ''});
 
     return (
         <div className="p-24">
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                open={toast.show}
-                autoHideDuration={3000}
-                message={toast.message}
-                onClose={handleToastClose}
-            />
             <Dialog
                 open={openDialog}
                 onClose={handleCloseDialog}
