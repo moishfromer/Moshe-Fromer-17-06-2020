@@ -5,21 +5,15 @@ import MailList from './MailList';
 import PickUserId from './PickUserId';
 import Header from './Header';
 import ComposeMail from './ComposeMail';
+import ResponsiveDrawer from '../../components/ResponsiveDrawer';
 
 export default function MailApp(){
 
     return (
-        <Grid container>
-            <Grid item xs={12}>
-                <ComposeMail/>
-            </Grid>
-            <Grid item md={2}>
-                <Sidebar />
-            </Grid>
-            <Grid item md={9}>
-                <PickUserId/>
-                <MailList/>
-            </Grid>
-        </Grid>
+        <ResponsiveDrawer menu={<Sidebar/>} appTitle={'Herolo Mail'}>
+            <ComposeMail/>
+            <PickUserId/>
+            <MailList/>
+        </ResponsiveDrawer> 
     )
 }

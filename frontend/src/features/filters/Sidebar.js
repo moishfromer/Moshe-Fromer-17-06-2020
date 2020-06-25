@@ -26,10 +26,10 @@ export default function Sidebar() {
           <Button
               variant="contained"
               color="primary"
-              className="w-full"
+              fullWidth
               onClick={handleOpenDialog}
           >
-              Compose
+              + Compose 
           </Button>
         </ListItem>
                   
