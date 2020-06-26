@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {TextField, Button, Dialog, DialogActions, DialogContent, Typography, Toolbar, AppBar, CircularProgress } from '@material-ui/core';
 import {useSelector, useDispatch} from 'react-redux';
-import { sendMessage, setOpenDialog } from './mailSlice';
+import { sendMessage, setOpenComposeDialog } from './mailSlice';
 import { unwrapResult } from '@reduxjs/toolkit'
 
 export default function ComposeMail(props)
@@ -14,7 +14,7 @@ export default function ComposeMail(props)
         message: ''
     }
     const [form, setForm] = useState({...emptyForm});
-    const { messagePending, openDialog } = useSelector(state => state.mailApp);
+    const { messagePending, openComposeDialog } = useSelector(state => state.mailApp);
 
     function handleChange(e){
         const { name, value } = e.target;
@@ -30,18 +30,18 @@ export default function ComposeMail(props)
 
     function handleCloseDialog()
     {
-        dispatch(setOpenDialog(false));
+        dispatch(setOpenComposeDialog(false));
     }
 
     function handleDelete()
     {
-        dispatch(setOpenDialog(false));
+        dispatch(setOpenComposeDialog(false));
     }
 
     function handleSubmit(ev)
     {
         ev.preventDefault();
-        
+
         dispatch(sendMessage(form))
         .then(unwrapResult)
         .then(res => {
@@ -55,7 +55,7 @@ export default function ComposeMail(props)
     return (
         <div className="p-24">
             <Dialog
-                open={openDialog}
+                open={openComposeDialog}
                 onClose={handleCloseDialog}
                 aria-labelledby="form-dialog-title"
             >

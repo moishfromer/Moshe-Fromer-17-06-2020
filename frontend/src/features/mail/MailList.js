@@ -6,6 +6,7 @@ import { createSelector } from '@reduxjs/toolkit'
 import { Delete } from '@material-ui/icons';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import { deleteMessage } from './mailSlice';
+import moment from 'moment';
 
 const selectMails = state => state.mailApp.mails;
 const selectFilter = state => state.visibilityFilter;
@@ -31,6 +32,9 @@ export default function MailList(){
     const { getMessagesPending, userId } = useSelector(state => state.mailApp)
     const noMailsMessage = userId ? 'No messages for this user' : 'Enter userId';
 
+    const visibilityFilter = useSelector(state => state.visibilityFilter)
+    const senderOrReceiver = visibilityFilter == VisibilityFilters.SHOW_INBOX ? 'sender' : 'receiver';
+
     const [openConfirmDialog, setOpenConfirmDialog ] = useState(false)
     const [mailToDelete, setMailToDelete ] = useState(null)
     const confirmDelete = mailId => {
@@ -41,7 +45,6 @@ export default function MailList(){
         dispatch(deleteMessage(mailToDelete));
         setOpenConfirmDialog(false)
     }
-
 
     return(
         <>
@@ -62,7 +65,7 @@ export default function MailList(){
                                 <Avatar />
                                 </ListItemAvatar>
                                 <ListItemText
-                                primary={mail.subject + ' - ' + new Date(mail.creation_date).toLocaleTimeString()}
+                                primary={mail.subject + ' - ' + moment(mail.creation_date).format('LT')}
                                 secondary={
                                     <>
                                         <Typography
@@ -70,7 +73,7 @@ export default function MailList(){
                                             variant="body2"
                                             color="textPrimary"
                                         >
-                                            {`UserId ${mail.sender} - `}
+                                            {`UserId ${mail[senderOrReceiver]} - `}
                                         </Typography>
                                         {mail.message}
                                         <IconButton 

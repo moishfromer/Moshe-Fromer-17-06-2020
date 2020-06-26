@@ -39,13 +39,13 @@ export const mailSlice = createSlice({
     messagePending: false,
     getMessagesPending: false,
     deletePending: false,
-    openDialog: false,
+    openComposeDialog: false,
     mails: [],
     userId: '',
     feedbackToast: {...emptyToast},
   },
   reducers: {
-      setOpenDialog: (state, action) => { state.openDialog = action.payload},
+      setOpenComposeDialog: (state, action) => { state.openComposeDialog = action.payload},
       setUserId: (state, action) => {state.userId = action.payload},
       closeToast: (state) => {state.feedbackToast = {...emptyToast}}
   },
@@ -53,7 +53,7 @@ export const mailSlice = createSlice({
       [sendMessage.pending]: (state, action) => {state.messagePending = true},
       [sendMessage.fulfilled]: (state, action) => {
         state.messagePending = false;
-        state.openDialog = false;
+        state.openComposeDialog = false;
         state.feedbackToast = {
           show: true, 
           message: 'message sent'
@@ -84,6 +84,6 @@ export const mailSlice = createSlice({
   }
 });
 
-export const { setOpenDialog, setUserId, closeToast } = mailSlice.actions;
+export const { setOpenComposeDialog, setUserId, closeToast } = mailSlice.actions;
 
 export default mailSlice.reducer;
