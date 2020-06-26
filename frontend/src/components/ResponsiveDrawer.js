@@ -89,7 +89,12 @@ export default function ResponsiveDrawer(props) {
               keepMounted: true, // Better open performance on mobile.
             }}
           >
-            {props.menu}
+            <div
+                role="button"
+                onClick={handleDrawerToggle}
+            >
+                {props.menu}
+            </div>
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css">
